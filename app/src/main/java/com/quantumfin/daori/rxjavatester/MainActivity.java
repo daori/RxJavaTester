@@ -4,17 +4,25 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.android.events.OnTextChangeEvent;
+import rx.android.observables.ViewObservable;
+import rx.functions.Func2;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private TextView helloWorld;
+    private Button loginButton;
+    private TextView username;
+    private EditText password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         //Sample 1
-        helloWorld = (TextView) findViewById(R.id.hello_world);
+        helloWorld = (TextView) findViewById(R.id.sample1);
         Observable<String> observer = Observable.create(new Observable.OnSubscribe<String>() {
             @Override
             public void call(Subscriber<? super String> subscriber) {
@@ -49,17 +57,47 @@ public class MainActivity extends ActionBarActivity {
         observer.subscribe(subscriber);
         //-----
 
-        //sample 2
-        Observable<List<String>> query(String text);
+        // Sample Login with validation using rxJava
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        loginButton = (Button) findViewById(R.id.login_button);
+        loginButton.setEnabled(false);
 
+        Observable<OnTextChangeEvent> usernameChangeEvent = ViewObservable.text(username);
+        Observable<OnTextChangeEvent> passwordChangeEvent = ViewObservable.text(password);
+
+        Observable<Boolean> observableResult = Observable.combineLatest(usernameChangeEvent, passwordChangeEvent,
+                new Func2<OnTextChangeEvent, OnTextChangeEvent, Boolean>() {
+                    @Override
+                    public Boolean call(OnTextChangeEvent usernameObservable, OnTextChangeEvent passwordObservable) {
+                        if(!usernameObservable.text.toString().equals("") &&
+                                !passwordObservable.text.toString().equals("")){
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+        Subscriber<Boolean> buttonSubscriber = new Subscriber<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onNext(Boolean state) {
+                loginButton.setEnabled(state);
+            }
+        };
+        observableResult.subscribe(buttonSubscriber);
 
 
     }
-
-    private List<String> query(String text){
-        return text;
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

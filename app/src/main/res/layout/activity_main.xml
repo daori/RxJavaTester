@@ -18,19 +18,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <TextView
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/username"
         android:layout_below="@+id/label_sample1"
-        android:id="@+id/label_sample2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="101dp"/>
+
+    <EditText
+        android:password="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/password"
+        android:layout_below="@+id/username"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"/>
+
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sample 2 : "
-        />
-
-    <TextView
-        android:layout_toRightOf="@+id/label_sample2"
-        android:id="@+id/sample2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
+        android:text="Login"
+        android:id="@+id/login_button"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
 
 </RelativeLayout>
